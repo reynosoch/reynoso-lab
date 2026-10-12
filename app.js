@@ -3,12 +3,12 @@ import { INBOX_STORAGE_KEY, addToInbox, createInboxEntry, normalizeInbox, parseG
 const STORAGE_KEY = "reynoso-lab.preferences.v1";
 
 const statusMeta = {
-  found: { label: "Encontrado", symbol: "◌", accent: "#73e6ff" },
-  saved: { label: "Guardado", symbol: "⌑", accent: "#a8ff78" },
-  testing: { label: "Probando", symbol: "◈", accent: "#ffbd70" },
-  works: { label: "Funciona", symbol: "✓", accent: "#68f5c2" },
-  adopted: { label: "Adoptado", symbol: "♥", accent: "#ff86bc" },
-  discarded: { label: "Descartado", symbol: "×", accent: "#8b93a6" }
+  found: { label: "Encontrado", icon: "search", accent: "#73e6ff" },
+  saved: { label: "Guardado", icon: "bookmark", accent: "#a8ff78" },
+  testing: { label: "Probando", icon: "flask-conical", accent: "#ffbd70" },
+  works: { label: "Funciona", icon: "badge-check", accent: "#68f5c2" },
+  adopted: { label: "Adoptado", icon: "package-check", accent: "#ff86bc" },
+  discarded: { label: "Descartado", icon: "ban", accent: "#8b93a6" }
 };
 
 const environmentMeta = {
@@ -59,6 +59,10 @@ function escapeHtml(value = "") {
   return String(value).replace(/[&<>'"]/g, character => ({
     "&": "&amp;", "<": "&lt;", ">": "&gt;", "'": "&#39;", '"': "&quot;"
   })[character]);
+}
+
+function icon(name, className = "icon") {
+  return `<svg class="${className}" aria-hidden="true"><use href="#icon-${name}"></use></svg>`;
 }
 
 function readPreferences() {
@@ -161,7 +165,7 @@ function renderCard(experiment) {
       <div>
         <div class="card-top">
           <span class="repo-icon" aria-hidden="true">${escapeHtml(experiment.name.slice(0, 2).toUpperCase())}</span>
-          <button class="favorite" type="button" data-action="favorite" aria-label="${favorite ? "Quitar de favoritos" : "Añadir a favoritos"}" aria-pressed="${favorite}">${favorite ? "★" : "☆"}</button>
+          <button class="favorite" type="button" data-action="favorite" aria-label="${favorite ? "Quitar de favoritos" : "Añadir a favoritos"}" aria-pressed="${favorite}">${icon("star", "icon favorite-icon")}</button>
         </div>
         <h3>${escapeHtml(experiment.name)}</h3>
         <span class="repo-name">${escapeHtml(experiment.owner)}/${escapeHtml(experiment.repo)}</span>
@@ -172,11 +176,11 @@ function renderCard(experiment) {
       </div>
       <div>
         <div class="card-meta">
-          <div class="meta-item"><small>Estado</small><strong class="status">${status.symbol} ${status.label}</strong></div>
+          <div class="meta-item"><small>Estado</small><strong class="status">${icon(status.icon, "icon status-icon")} ${status.label}</strong></div>
           <div class="meta-item"><small>Entorno</small><strong>${escapeHtml(environment.short)}</strong></div>
         </div>
         <div class="card-actions">
-          <a href="${escapeHtml(experiment.repository)}" target="_blank" rel="noreferrer">GitHub ↗</a>
+          <a href="${escapeHtml(experiment.repository)}" target="_blank" rel="noreferrer">GitHub ${icon("external-link")}</a>
           <button class="detail-button" type="button" data-action="detail">Abrir ficha</button>
         </div>
       </div>
@@ -199,7 +203,7 @@ function renderInboxItem(entry) {
       <span class="repo-icon" aria-hidden="true">${escapeHtml(entry.repo.slice(0, 2).toUpperCase())}</span>
       <div class="inbox-copy"><strong>${escapeHtml(entry.repo)}</strong><small>${escapeHtml(entry.owner)}/${escapeHtml(entry.repo)}</small></div>
       <div class="inbox-state"><small>${escapeHtml(environmentMeta[entry.recommendedEnvironment]?.short || "Por clasificar")}</small><strong>${escapeHtml(review.label)}</strong></div>
-      <div class="inbox-actions"><a href="${escapeHtml(entry.repository)}" target="_blank" rel="noreferrer">GitHub ↗</a><button class="review-button" type="button" data-inbox-action="review">Revisar</button></div>
+      <div class="inbox-actions"><a href="${escapeHtml(entry.repository)}" target="_blank" rel="noreferrer">GitHub ${icon("external-link")}</a><button class="review-button" type="button" data-inbox-action="review">Revisar</button></div>
     </article>`;
 }
 
@@ -217,7 +221,7 @@ function render() {
   elements.grid.hidden = visible.length === 0;
   elements.empty.hidden = visible.length !== 0;
   elements.count.textContent = `${visible.length} de ${state.experiments.length} ${state.experiments.length === 1 ? "experimento" : "experimentos"}`;
-  elements.view.textContent = state.view === "grid" ? "▤" : "▦";
+  elements.view.innerHTML = state.view === "grid" ? icon("rows-3") : icon("layout-grid");
   elements.view.setAttribute("aria-label", state.view === "grid" ? "Cambiar a vista de lista" : "Cambiar a vista de cuadrícula");
   document.querySelectorAll("[data-status]").forEach(button => {
     const active = button.dataset.status === state.status;
@@ -248,19 +252,19 @@ function openDetail(experiment) {
       <div>
         <section class="detail-section"><h3>Por qué lo guardé</h3><p>${escapeHtml(experiment.why)}</p></section>
         <section class="detail-section"><h3>Requisitos principales</h3>${list(experiment.requirements)}</section>
-        <section class="detail-section"><h3>Cómo probarlo</h3><p>Comandos tomados del README oficial. Revísalos antes de ejecutarlos.</p><div class="command-list">${experiment.commands.map(command => `<div class="command"><code>${escapeHtml(command)}</code><button type="button" data-copy="${escapeHtml(command)}" aria-label="Copiar comando">⧉</button></div>`).join("")}</div></section>
+        <section class="detail-section"><h3>Cómo probarlo</h3><p>Comandos tomados del README oficial. Revísalos antes de ejecutarlos.</p><div class="command-list">${experiment.commands.map(command => `<div class="command"><code>${escapeHtml(command)}</code><button type="button" data-copy="${escapeHtml(command)}" aria-label="Copiar comando">${icon("copy")}</button></div>`).join("")}</div></section>
         <section class="detail-section"><h3>Qué quiero experimentar después</h3>${list(experiment.nextExperiments)}</section>
         <section class="detail-section"><h3>Seguridad</h3>${list(experiment.security.warnings)}</section>
       </div>
       <aside class="detail-facts" aria-label="Datos del experimento">
-        <div class="fact"><small>Estado</small><strong style="color:${status.accent}">${status.symbol} ${status.label}</strong></div>
+        <div class="fact"><small>Estado</small><strong class="status" style="color:${status.accent}">${icon(status.icon, "icon status-icon")} ${status.label}</strong></div>
         <div class="fact"><small>Entorno recomendado</small><strong>${escapeHtml(environment.label)}</strong></div>
         <div class="fact"><small>Dificultad</small><strong>${experiment.difficulty === "intermediate" ? "Intermedia" : escapeHtml(experiment.difficulty)}</strong></div>
         <div class="fact"><small>Licencia original</small><strong>${escapeHtml(experiment.license)}</strong></div>
         <div class="fact"><small>Encontrado</small><strong>${new Intl.DateTimeFormat("es-MX", { dateStyle: "medium" }).format(new Date(`${experiment.createdAt}T12:00:00`))}</strong></div>
         <div class="fact"><small>Revisado</small><strong>${escapeHtml(experiment.security.reviewed.join(", "))}</strong></div>
         <div class="detail-actions">
-          <a class="button primary" href="${launchUrl(experiment)}" target="_blank" rel="noreferrer">${escapeHtml(launchLabel(experiment))} ↗</a>
+          <a class="button primary" href="${launchUrl(experiment)}" target="_blank" rel="noreferrer">${escapeHtml(launchLabel(experiment))} ${icon("external-link")}</a>
           <a class="button secondary" href="${escapeHtml(experiment.repository)}" target="_blank" rel="noreferrer">Repositorio original</a>
           <a class="button secondary" href="https://github.com/${owner}/${repo}/fork" target="_blank" rel="noreferrer">Crear fork</a>
           <a class="button secondary" href="${notesUrl}" target="_blank" rel="noreferrer">Notas versionadas</a>
@@ -302,7 +306,7 @@ function openInboxDetail(entry) {
           </select>
         </div>
         <div class="detail-actions">
-          <a class="button primary" href="${launchUrl(entry)}" target="_blank" rel="noreferrer" data-launch-draft>${escapeHtml(launchLabel(entry))} ↗</a>
+          <a class="button primary" href="${launchUrl(entry)}" target="_blank" rel="noreferrer" data-launch-draft>${escapeHtml(launchLabel(entry))} ${icon("external-link")}</a>
           <button class="button secondary" type="button" data-export-draft>Exportar ficha JSON</button>
           <button class="button secondary" type="button" data-copy="git clone ${escapeHtml(entry.repository)}.git">Copiar clone</button>
           <button class="button secondary danger-button" type="button" data-remove-draft>Quitar de la bandeja</button>
@@ -336,12 +340,12 @@ function renderPreliminaryAnalysis(parts) {
   github.href = parts.repository;
   github.target = "_blank";
   github.rel = "noreferrer";
-  github.textContent = "Abrir GitHub ↗";
+  github.innerHTML = `Abrir GitHub ${icon("external-link")}`;
   const codespaces = document.createElement("a");
   codespaces.href = `https://codespaces.new/${encodeURIComponent(parts.owner)}/${encodeURIComponent(parts.repo)}?quickstart=1`;
   codespaces.target = "_blank";
   codespaces.rel = "noreferrer";
-  codespaces.textContent = "Preparar Codespaces ↗";
+  codespaces.innerHTML = `Preparar Codespaces ${icon("external-link")}`;
   const clone = document.createElement("button");
   clone.type = "button";
   clone.textContent = "Copiar clone";

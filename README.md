@@ -4,6 +4,8 @@
 
 Laboratorio personal para descubrir, inspeccionar, probar y documentar proyectos open source. LAB es un **Experiment Registry + Launcher**: conserva contexto, propone el entorno adecuado y enlaza al lugar donde sí tiene sentido experimentar.
 
+LAB comparte con Toolchain el mismo sistema Liquid Glass —superficies translúcidas, brillo interno, profundidad, radios y navegación— y conserva el verde como señal de exploración. La interfaz usa iconos locales de Lucide 1.55.0 en lugar de emojis o flechas tipográficas; su licencia está en `assets/LUCIDE_LICENSE.txt`.
+
 ```text
 Discover → Inspect → Launch → Experiment → Learn → Keep / Discard / Promote
 ```
