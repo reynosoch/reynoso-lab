@@ -15,6 +15,13 @@ Discover → Inspect → Launch → Experiment → Learn → Keep / Discard / Pr
 - Un launcher hacia GitHub, Codespaces y otros entornos apropiados.
 - Un paso intermedio entre “lo encontré” y “lo adopté”.
 
+La captura cotidiana funciona así:
+
+```text
+Veo un repo → lo pego → lo analizo → lo guardo en la bandeja local
+→ lo reviso después → decido si probarlo → abro el entorno correcto
+```
+
 ## Qué no es
 
 - No es **Reynoso Toolchain**. Toolchain contiene herramientas ya adoptadas y de uso real.
@@ -71,7 +78,7 @@ tests/                            Contratos del esquema y del sitio
 .github/workflows/pages.yml       Verificación y publicación en Pages
 ```
 
-La aplicación usa rutas relativas para funcionar bajo `/reynoso-lab/`. `localStorage` guarda únicamente vista, filtros, favoritos y la última URL escrita. El catálogo oficial siempre vive en Git.
+La aplicación usa rutas relativas para funcionar bajo `/reynoso-lab/`. `localStorage` guarda vista, filtros, favoritos, la última URL escrita y una **bandeja local de capturas pendientes**. Esa bandeja permite volver después, completar una revisión de seguridad, elegir entorno, conservar notas y exportar una ficha. El catálogo oficial siempre vive en Git; guardar localmente nunca finge un cambio en GitHub.
 
 ## Registrar un experimento
 

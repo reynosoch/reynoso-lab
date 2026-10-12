@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import { addToInbox, createInboxEntry, normalizeInbox, parseGitHubRepository, reviewProgress } from "../lib/inbox.js";
 
 const root = resolve(import.meta.dirname, "..");
 const data = JSON.parse(await readFile(resolve(root, "data/experiments.json"), "utf8"));
@@ -36,4 +37,26 @@ test("Whisper se registra sin copiar su repositorio", () => {
   assert.equal(whisper.recommendedEnvironment, "codespaces");
   assert.deepEqual(whisper.tags, ["AI", "Audio", "Python", "PyTorch", "Speech-to-text"]);
   assert.equal(whisper.license, "MIT");
+});
+
+test("la bandeja valida GitHub y conserva una captura sin duplicarla", () => {
+  const parsed = parseGitHubRepository("github.com/vercel/next.js");
+  assert.deepEqual(parsed, { owner: "vercel", repo: "next.js", repository: "https://github.com/vercel/next.js" });
+  assert.equal(parseGitHubRepository("https://example.com/vercel/next.js"), null);
+  assert.equal(parseGitHubRepository("https://github.com/vercel/next.js/issues"), null);
+  const entry = createInboxEntry(parsed, "2026-10-11T12:00:00.000Z");
+  const first = addToInbox([], entry);
+  const duplicate = addToInbox(first.entries, entry);
+  assert.equal(first.created, true);
+  assert.equal(duplicate.created, false);
+  assert.equal(duplicate.entries.length, 1);
+  assert.equal(reviewProgress(entry).completed, 0);
+});
+
+test("la bandeja normaliza datos locales incompletos", () => {
+  const entries = normalizeInbox([{ repository: "https://github.com/openai/whisper", review: { readme: true } }, { repository: "javascript:alert(1)" }]);
+  assert.equal(entries.length, 1);
+  assert.equal(entries[0].recommendedEnvironment, "codespaces");
+  assert.equal(entries[0].review.readme, true);
+  assert.equal(reviewProgress(entries[0]).completed, 1);
 });

@@ -53,6 +53,9 @@
               <p id="repo-help" class="field-help">No guarda nada en GitHub ni ejecuta código.</p>
             </form>
             <div id="analysis-result" class="analysis-result" aria-live="polite" hidden></div>
+            <ol class="capture-flow" aria-label="Flujo de captura">
+              <li><span>01</span>Encuentro</li><li><span>02</span>Analizo</li><li><span>03</span>Guardo</li><li><span>04</span>Reviso</li><li><span>05</span>Pruebo</li>
+            </ol>
           </div>
         </div>
       </section>
@@ -63,9 +66,21 @@
         <span class="safety-code">SAFE_MODE = ON</span>
       </section>
 
+      <section id="inbox" class="inbox shell" aria-labelledby="inbox-title">
+        <div class="section-heading inbox-heading">
+          <div><p class="step-label">02 / INBOX</p><h2 id="inbox-title">Para revisar después</h2></div>
+          <div><p>Capturas locales de repos encontrados en TikTok, GitHub, Reddit o YouTube.</p><span id="inbox-count" class="local-label">0 · solo en este dispositivo</span></div>
+        </div>
+        <div id="inbox-list" class="inbox-list" aria-live="polite"></div>
+        <div id="inbox-empty" class="inbox-empty glass">
+          <span aria-hidden="true">⌁</span><div><strong>Tu bandeja está vacía</strong><p>Pega un repositorio arriba, analízalo y guárdalo para volver después.</p></div>
+        </div>
+        <p class="inbox-truth"><strong>Importante:</strong> esta bandeja vive únicamente en tu navegador. Un repo se vuelve experimento oficial cuando su ficha se revisa y se añade a <code>data/experiments.json</code> mediante Git.</p>
+      </section>
+
       <section id="catalog" class="catalog shell" aria-labelledby="catalog-title">
         <div class="section-heading">
-          <div><p class="step-label">02 / REGISTRY</p><h2 id="catalog-title">Experimentos</h2></div>
+          <div><p class="step-label">03 / REGISTRY</p><h2 id="catalog-title">Experimentos oficiales</h2></div>
           <p id="result-count" class="result-count">Cargando catálogo…</p>
         </div>
 
@@ -93,7 +108,7 @@
       </section>
 
       <section id="method" class="method shell" aria-labelledby="method-title">
-        <div class="section-heading"><div><p class="step-label">03 / METHOD</p><h2 id="method-title">Del hallazgo a algo útil</h2></div><p>El resultado también puede ser “no sirve”. El aprendizaje se queda.</p></div>
+        <div class="section-heading"><div><p class="step-label">04 / METHOD</p><h2 id="method-title">Del hallazgo a algo útil</h2></div><p>El resultado también puede ser “no sirve”. El aprendizaje se queda.</p></div>
         <ol class="flow-list">
           <li><span>01</span><strong>Discover</strong><small>Lo encontré</small></li>
           <li><span>02</span><strong>Inspect</strong><small>Entiendo riesgos</small></li>
