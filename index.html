@@ -1,0 +1,115 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#080a10" />
+    <meta name="description" content="Reynoso LAB: registro y launcher personal para descubrir, inspeccionar y aprender de proyectos open source." />
+    <meta property="og:title" content="Reynoso LAB" />
+    <meta property="og:description" content="Discover. Inspect. Experiment. Keep what works." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://reynosoch.github.io/reynoso-lab/" />
+    <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="./styles.css" />
+    <title>Reynoso LAB · Experiment Registry</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#catalog">Saltar al catálogo</a>
+    <div class="ambient ambient-one" aria-hidden="true"></div>
+    <div class="ambient ambient-two" aria-hidden="true"></div>
+
+    <header class="topbar shell">
+      <a class="brand" href="./" aria-label="Reynoso LAB, inicio">
+        <span class="brand-mark" aria-hidden="true"><span>R</span><i></i></span>
+        <span class="brand-copy"><b>REYNOSO</b><strong>LAB</strong></span>
+      </a>
+      <nav aria-label="Navegación principal">
+        <a href="#catalog">Experimentos</a>
+        <a href="#method">Método</a>
+        <a class="toolchain-link" href="https://reynosoch.github.io/">Toolchain <span aria-hidden="true">↗</span></a>
+      </nav>
+    </header>
+
+    <main>
+      <section class="hero shell" aria-labelledby="hero-title">
+        <div class="hero-copy">
+          <p class="eyebrow"><span class="live-dot"></span> Personal experiment registry</p>
+          <h1 id="hero-title">Break it.<br /><span>Understand it.</span><br />Keep what works.</h1>
+          <p class="hero-intro">Repositorios que estoy explorando. Los registro, inspecciono y lanzo en el entorno correcto sin convertir este sitio en un cementerio de código ajeno.</p>
+        </div>
+
+        <div class="analyzer glass" aria-labelledby="analyzer-title">
+          <div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>new-experiment.sh</span></div>
+          <div class="analyzer-body">
+            <p class="step-label">01 / CAPTURE</p>
+            <h2 id="analyzer-title">Encontré un repo</h2>
+            <p>Pega su URL. LAB validará la dirección y preparará una ficha local para inspeccionarla.</p>
+            <form id="repo-form" novalidate>
+              <label for="repo-url">Repositorio de GitHub</label>
+              <div class="input-row">
+                <input id="repo-url" name="repository" type="url" inputmode="url" autocomplete="url" placeholder="https://github.com/owner/repository" aria-describedby="repo-help" required />
+                <button class="button primary" type="submit">Analizar <span aria-hidden="true">→</span></button>
+              </div>
+              <p id="repo-help" class="field-help">No guarda nada en GitHub ni ejecuta código.</p>
+            </form>
+            <div id="analysis-result" class="analysis-result" aria-live="polite" hidden></div>
+          </div>
+        </div>
+      </section>
+
+      <section class="safety shell" aria-label="Regla de seguridad">
+        <span class="safety-icon" aria-hidden="true">!</span>
+        <div><strong>Repositorio externo</strong><p>Revisa código, scripts de instalación, workflows y licencias antes de ejecutar. Nunca pegues secretos.</p></div>
+        <span class="safety-code">SAFE_MODE = ON</span>
+      </section>
+
+      <section id="catalog" class="catalog shell" aria-labelledby="catalog-title">
+        <div class="section-heading">
+          <div><p class="step-label">02 / REGISTRY</p><h2 id="catalog-title">Experimentos</h2></div>
+          <p id="result-count" class="result-count">Cargando catálogo…</p>
+        </div>
+
+        <div class="toolbar glass">
+          <label class="search-control" for="search-input"><span aria-hidden="true">⌕</span><span class="sr-only">Buscar experimentos</span><input id="search-input" type="search" placeholder="Buscar Whisper, AI, Python, Audio…" /></label>
+          <label class="environment-control" for="environment-filter"><span class="sr-only">Filtrar por entorno</span><select id="environment-filter"><option value="all">Todos los entornos</option><option value="pages">Pages</option><option value="codespaces">Codespaces</option><option value="local">Local</option><option value="vercel">Vercel</option><option value="railway">Railway</option><option value="docker">Docker</option><option value="unknown">Por clasificar</option></select></label>
+          <div class="toolbar-actions">
+            <button id="view-toggle" class="icon-button" type="button" aria-label="Cambiar a vista de lista" title="Cambiar vista">▤</button>
+            <button id="export-button" class="button secondary" type="button">Exportar JSON</button>
+          </div>
+        </div>
+
+        <div id="status-filters" class="filter-row" role="group" aria-label="Filtrar por estado">
+          <button class="filter is-active" type="button" data-status="all" aria-pressed="true">Todos</button>
+          <button class="filter" type="button" data-status="found" aria-pressed="false">Encontrados</button>
+          <button class="filter" type="button" data-status="saved" aria-pressed="false">Guardados / por probar</button>
+          <button class="filter" type="button" data-status="testing" aria-pressed="false">Probando</button>
+          <button class="filter" type="button" data-status="works" aria-pressed="false">Funcionan</button>
+          <button class="filter" type="button" data-status="adopted" aria-pressed="false">Adoptados</button>
+          <button class="filter" type="button" data-status="discarded" aria-pressed="false">Descartados</button>
+        </div>
+
+        <div id="experiment-grid" class="experiment-grid" aria-live="polite"></div>
+        <div id="empty-state" class="empty-state glass" hidden><span aria-hidden="true">∅</span><h3>No hay coincidencias</h3><p>Prueba otro término, estado o entorno.</p><button id="clear-filters" class="button secondary" type="button">Limpiar filtros</button></div>
+      </section>
+
+      <section id="method" class="method shell" aria-labelledby="method-title">
+        <div class="section-heading"><div><p class="step-label">03 / METHOD</p><h2 id="method-title">Del hallazgo a algo útil</h2></div><p>El resultado también puede ser “no sirve”. El aprendizaje se queda.</p></div>
+        <ol class="flow-list">
+          <li><span>01</span><strong>Discover</strong><small>Lo encontré</small></li>
+          <li><span>02</span><strong>Inspect</strong><small>Entiendo riesgos</small></li>
+          <li><span>03</span><strong>Launch</strong><small>Elijo entorno</small></li>
+          <li><span>04</span><strong>Experiment</strong><small>Lo modifico</small></li>
+          <li><span>05</span><strong>Learn</strong><small>Documento</small></li>
+          <li><span>06</span><strong>Keep</strong><small>Promuevo o descarto</small></li>
+        </ol>
+        <div class="promotion glass"><div><span class="promotion-mark">LAB</span><span aria-hidden="true">→</span><div><strong>Toolchain</strong><small>Una herramienta adoptada</small></div></div><div><span class="promotion-mark">LAB</span><span aria-hidden="true">→</span><div><strong>Proyecto propio</strong><small>Una idea que creció</small></div></div><div><span class="promotion-mark">LAB</span><span aria-hidden="true">→</span><div><strong>Fork permanente</strong><small>Una base para desarrollar</small></div></div></div>
+      </section>
+    </main>
+
+    <footer class="shell"><p><strong>REYNOSO LAB</strong> · Git + JSON + Markdown. Sin backend, sin secretos, sin magia falsa.</p><a href="https://github.com/reynosoch/reynoso-lab">Ver fuente <span aria-hidden="true">↗</span></a></footer>
+
+    <dialog id="experiment-dialog" aria-labelledby="dialog-title"><div id="dialog-content"></div><button id="dialog-close" class="dialog-close" type="button" aria-label="Cerrar detalle">×</button></dialog>
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>

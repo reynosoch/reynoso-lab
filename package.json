@@ -1,0 +1,10 @@
+{
+  "name": "reynoso-lab",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "check": "node --test tests/*.test.mjs && node --check app.js && node scripts/validate-site.mjs",
+    "build": "node scripts/build.mjs"
+  }
+}

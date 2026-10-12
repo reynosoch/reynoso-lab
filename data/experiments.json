@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-10-11",
+  "experiments": [
+    {
+      "id": "openai-whisper",
+      "name": "Whisper",
+      "repository": "https://github.com/openai/whisper",
+      "owner": "openai",
+      "repo": "whisper",
+      "author": "OpenAI",
+      "description": "Sistema de reconocimiento de voz multilingüe capaz de transcribir, identificar idiomas y traducir audio a inglés.",
+      "why": "Quiero evaluar transcripciones largas y comparar calidad, velocidad y consumo entre modelos para juntas y notas de voz.",
+      "status": "saved",
+      "tags": ["AI", "Audio", "Python", "PyTorch", "Speech-to-text"],
+      "languages": ["Python"],
+      "technologies": ["PyTorch", "FFmpeg", "tiktoken"],
+      "recommendedEnvironment": "codespaces",
+      "usedEnvironment": null,
+      "difficulty": "intermediate",
+      "rating": null,
+      "license": "MIT",
+      "createdAt": "2026-10-11",
+      "testedAt": null,
+      "notesPath": "experiments/openai-whisper/README.md",
+      "readmeUrl": "https://github.com/openai/whisper/blob/main/README.md",
+      "requirements": [
+        "Python 3.8 o posterior según el paquete actual",
+        "PyTorch y dependencias de Python",
+        "FFmpeg instalado en el entorno",
+        "Espacio y memoria suficientes para descargar y ejecutar el modelo elegido"
+      ],
+      "commands": [
+        "git clone https://github.com/openai/whisper.git",
+        "cd whisper",
+        "pip install -U openai-whisper",
+        "whisper audio.mp3 --model turbo"
+      ],
+      "nextExperiments": [
+        "Comparar turbo, small y medium con audio de una junta real",
+        "Medir tiempo, RAM y calidad con CPU frente a GPU",
+        "Probar español, ruido de fondo y varios interlocutores",
+        "Evaluar cómo integrar el resultado con Transcribe sin mezclar repositorios"
+      ],
+      "promotion": {
+        "target": null,
+        "repository": null,
+        "promotedAt": null
+      },
+      "security": {
+        "externalRepository": true,
+        "reviewed": ["README", "LICENSE", "pyproject.toml", "requirements.txt"],
+        "warnings": [
+          "Revisa código, dependencias y scripts antes de ejecutar.",
+          "No añadas tokens, contraseñas ni API keys al repositorio o al Codespace.",
+          "La instalación descarga paquetes y los modelos se descargan al primer uso."
+        ]
+      }
+    }
+  ]
+}
