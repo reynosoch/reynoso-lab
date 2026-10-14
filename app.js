@@ -74,31 +74,31 @@ function readPreferences() {
     state.view = saved.view === "list" ? "list" : "grid";
     state.favorites = Array.isArray(saved.favorites) ? saved.favorites : [];
   } catch {
-    localStorage.removeItem(STORAGE_KEY);
+    try{localStorage.removeItem(STORAGE_KEY);}catch{}
   }
 }
 
 function savePreferences() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify({
+  try{localStorage.setItem(STORAGE_KEY, JSON.stringify({
     search: state.search,
     status: state.status,
     environment: state.environment,
     view: state.view,
     favorites: state.favorites
-  }));
+  }));}catch{}
 }
 
 function readInbox() {
   try {
     state.inbox = normalizeInbox(JSON.parse(localStorage.getItem(INBOX_STORAGE_KEY) || "[]"));
   } catch {
-    localStorage.removeItem(INBOX_STORAGE_KEY);
+    try{localStorage.removeItem(INBOX_STORAGE_KEY);}catch{}
     state.inbox = [];
   }
 }
 
 function saveInbox() {
-  localStorage.setItem(INBOX_STORAGE_KEY, JSON.stringify(state.inbox));
+  try{localStorage.setItem(INBOX_STORAGE_KEY, JSON.stringify(state.inbox));return true;}catch{showToast("No se pudo guardar. Exporte la ficha antes de cerrar esta sesión.");return false;}
 }
 
 function showToast(message) {
@@ -159,7 +159,7 @@ function renderCard(experiment) {
   const status = statusMeta[experiment.status] || statusMeta.found;
   const environment = environmentMeta[experiment.recommendedEnvironment] || environmentMeta.unknown;
   const favorite = state.favorites.includes(experiment.id);
-  const tags = experiment.tags.slice(0, 5).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
+  const tags = experiment.tags.filter(tag=>!/^AI$|^IA$/i.test(tag)).slice(0, 5).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("");
   return `
     <article class="experiment-card${state.view === "list" ? " is-list" : ""}" style="--accent:${status.accent}" data-id="${escapeHtml(experiment.id)}">
       <div>
@@ -246,7 +246,7 @@ function openDetail(experiment) {
       <h2 id="dialog-title">${escapeHtml(experiment.name)}</h2>
       <span class="repo-name">${escapeHtml(experiment.owner)}/${escapeHtml(experiment.repo)}</span>
       <p>${escapeHtml(experiment.description)}</p>
-      <div class="tag-row">${experiment.tags.map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
+      <div class="tag-row">${experiment.tags.filter(tag=>!/^AI$|^IA$/i.test(tag)).map(tag => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
     </div>
     <div class="detail-body">
       <div>
@@ -285,7 +285,7 @@ function openInboxDetail(entry) {
       <h2 id="dialog-title">${escapeHtml(entry.repo)}</h2>
       <span class="repo-name">${escapeHtml(entry.owner)}/${escapeHtml(entry.repo)}</span>
       <p>Captura local pendiente de inspección. Completa la revisión, elige el entorno y decide si vale la pena probarlo.</p>
-      <div class="tag-row"><span class="tag">LOCAL INBOX</span><span class="tag">${progress.completed}/${progress.total} REVISADO</span></div>
+      <div class="tag-row"><span class="tag">BANDEJA LOCAL</span><span class="tag">${progress.completed}/${progress.total} REVISADO</span></div>
     </div>
     <div class="detail-body" data-draft-id="${escapeHtml(entry.id)}">
       <div>
@@ -308,7 +308,7 @@ function openInboxDetail(entry) {
         <div class="detail-actions">
           <a class="button primary" href="${launchUrl(entry)}" target="_blank" rel="noreferrer" data-launch-draft>${escapeHtml(launchLabel(entry))} ${icon("external-link")}</a>
           <button class="button secondary" type="button" data-export-draft>Exportar ficha JSON</button>
-          <button class="button secondary" type="button" data-copy="git clone ${escapeHtml(entry.repository)}.git">Copiar clone</button>
+          <button class="button secondary" type="button" data-copy="git clone ${escapeHtml(entry.repository)}.git">Copiar comando</button>
           <button class="button secondary danger-button" type="button" data-remove-draft>Quitar de la bandeja</button>
         </div>
       </aside>
@@ -333,7 +333,7 @@ function renderPreliminaryAnalysis(parts) {
   const title = document.createElement("strong");
   title.textContent = `${parts.owner}/${parts.repo}`;
   const description = document.createElement("p");
-  description.textContent = "Ficha preliminar lista. Al ser un repo desconocido, el entorno inicial recomendado es Codespaces; falta inspeccionar README, licencia, dependencias y scripts.";
+  description.textContent = "Ficha preliminar preparada. Revise README, licencia, dependencias y scripts antes de elegir el entorno de prueba.";
   const links = document.createElement("div");
   links.className = "analysis-links";
   const github = document.createElement("a");
@@ -348,7 +348,7 @@ function renderPreliminaryAnalysis(parts) {
   codespaces.innerHTML = `Preparar Codespaces ${icon("external-link")}`;
   const clone = document.createElement("button");
   clone.type = "button";
-  clone.textContent = "Copiar clone";
+  clone.textContent = "Copiar comando";
   clone.addEventListener("click", () => copyText(`git clone ${parts.repository}.git`, "Comando de clone copiado"));
   const save = document.createElement("button");
   save.type = "button";
@@ -387,10 +387,10 @@ function savePendingAnalysis() {
   if (!state.pendingAnalysis) return;
   const result = addToInbox(state.inbox, createInboxEntry(state.pendingAnalysis));
   state.inbox = result.entries;
-  saveInbox();
+  const persisted=saveInbox();
   renderInbox();
   renderPreliminaryAnalysis(state.pendingAnalysis);
-  showToast(result.created ? "Guardado para revisar después" : "Este repo ya estaba en tu bandeja");
+  showToast(!persisted?"Ficha disponible solo en esta sesión. Exporte antes de cerrar.":result.created ? "Guardado para revisar después" : "Este repositorio ya está en la bandeja");
   if (result.created) document.querySelector("#inbox").scrollIntoView({ behavior: "smooth", block: "start" });
 }
 
@@ -452,14 +452,17 @@ function bindEvents() {
   elements.form.addEventListener("submit", event => {
     event.preventDefault();
     const parsed = parseGitHubRepository(elements.repoUrl.value);
-    if (!parsed) renderAnalysisError();
+    elements.repoUrl.setAttribute("aria-invalid",String(!parsed));
+    if (!parsed) {renderAnalysisError();elements.repoUrl.focus();}
     else {
-      localStorage.setItem("reynoso-lab.last-repository", parsed.repository);
+      try{localStorage.setItem("reynoso-lab.last-repository", parsed.repository);}catch{}
       renderPreliminaryAnalysis(parsed);
     }
   });
   elements.exportButton.addEventListener("click", exportCatalog);
   elements.clear.addEventListener("click", resetFilters);
+  document.querySelector("#reset-catalog").addEventListener("click",resetFilters);
+  document.addEventListener("keydown",event=>{if(event.key==="/"&&!event.ctrlKey&&!event.metaKey&&!event.altKey&&!document.querySelector("dialog[open]")&&!event.target.closest("input,textarea,select,[contenteditable=true]")){event.preventDefault();elements.search.scrollIntoView({block:"center"});elements.search.focus();}if(event.key==="Escape"&&event.target===elements.search)resetFilters();});
   elements.dialogClose.addEventListener("click", () => elements.dialog.close());
   elements.dialog.addEventListener("click", event => {
     if (event.target === elements.dialog) elements.dialog.close();
@@ -512,7 +515,7 @@ async function initialize() {
   readInbox();
   elements.search.value = state.search;
   elements.environment.value = state.environment;
-  const lastRepository = localStorage.getItem("reynoso-lab.last-repository");
+  let lastRepository;try{lastRepository=localStorage.getItem("reynoso-lab.last-repository");}catch{}
   if (lastRepository) elements.repoUrl.value = lastRepository;
   bindEvents();
   try {

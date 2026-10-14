@@ -25,9 +25,15 @@ jobs:
         with:
           node-version: 22
       - name: Verify
+        run: npm ci
+      - name: Check
         run: npm run check
       - name: Build
         run: npm run build
+      - name: Install browser
+        run: npx playwright install --with-deps chromium
+      - name: Browser verification
+        run: npm run check:browser
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact

@@ -10,10 +10,10 @@
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://reynosoch.github.io/reynoso-lab/" />
     <link rel="icon" href="./assets/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="./styles.css?v=liquid-glass" />
-    <title>Reynoso LAB · Experiment Registry</title>
+    <link rel="stylesheet" href="./styles.css?v=workspace-2" />
+    <link rel="stylesheet" href="./portal.css?v=2"><link rel="stylesheet" href="./workspace.css?v=2"><title>Reynoso LAB · Registro de proyectos</title>
   </head>
-  <body>
+  <body data-portal="reynoso-lab" data-family="lab">
     <a class="skip-link" href="#catalog">Saltar al catálogo</a>
     <div class="ambient ambient-one" aria-hidden="true"></div>
     <div class="ambient ambient-two" aria-hidden="true"></div>
@@ -55,27 +55,27 @@
       </nav>
     </header>
 
-    <main>
+    <main><nav class="lab-index shell" aria-label="Secciones de LAB"><a href="#repo-form">Registrar repositorio</a><a href="#inbox">Bandeja local</a><a href="#catalog">Experimentos</a><a href="#method">Método de revisión</a></nav>
       <section class="hero shell" aria-labelledby="hero-title">
         <div class="hero-copy">
-          <p class="eyebrow"><span class="live-dot"></span> Personal experiment registry</p>
-          <h1 id="hero-title">Break it.<br /><span>Understand it.</span><br />Keep what works.</h1>
-          <p class="hero-intro">Repositorios que estoy explorando. Los registro, inspecciono y lanzo en el entorno correcto sin convertir este sitio en un cementerio de código ajeno.</p>
+          <p class="eyebrow"><span class="live-dot"></span> REGISTRO DE PROYECTOS</p>
+          <h1 id="hero-title">De un repositorio<br /><span>a una decisión.</span></h1>
+          <p class="hero-intro">Registre proyectos, revise sus requisitos y conserve las opciones que merecen una prueba.</p>
         </div>
 
         <div class="analyzer glass" aria-labelledby="analyzer-title">
           <div class="window-bar" aria-hidden="true"><i></i><i></i><i></i><span>new-experiment.sh</span></div>
           <div class="analyzer-body">
-            <p class="step-label">01 / CAPTURE</p>
-            <h2 id="analyzer-title">Encontré un repo</h2>
-            <p>Pega su URL. LAB validará la dirección y preparará una ficha local para inspeccionarla.</p>
+            <p class="step-label">01 / REGISTRAR</p>
+            <h2 id="analyzer-title">Registrar un repositorio</h2>
+            <p>Pegue la URL de GitHub para preparar una ficha y revisarla cuando lo necesite.</p>
             <form id="repo-form" novalidate>
               <label for="repo-url">Repositorio de GitHub</label>
               <div class="input-row">
-                <input id="repo-url" name="repository" type="url" inputmode="url" autocomplete="url" placeholder="https://github.com/owner/repository" aria-describedby="repo-help" required />
-                <button class="button primary" type="submit">Analizar <svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"/></svg></button>
+                <input id="repo-url" name="repository" type="url" inputmode="url" autocomplete="url" placeholder="https://github.com/owner/repository" aria-describedby="repo-help analysis-result" required />
+                <button class="button primary" type="submit">Preparar ficha <svg class="icon" aria-hidden="true"><use href="#icon-arrow-right"/></svg></button>
               </div>
-              <p id="repo-help" class="field-help">No guarda nada en GitHub ni ejecuta código.</p>
+              <p id="repo-help" class="field-help">La ficha se prepara en este dispositivo. No se ejecuta el repositorio.</p>
             </form>
             <div id="analysis-result" class="analysis-result" aria-live="polite" hidden></div>
             <ol class="capture-flow" aria-label="Flujo de captura">
@@ -88,31 +88,31 @@
       <section class="safety shell" aria-label="Regla de seguridad">
         <span class="safety-icon" aria-hidden="true"><svg class="icon"><use href="#icon-shield-alert"/></svg></span>
         <div><strong>Repositorio externo</strong><p>Revisa código, scripts de instalación, workflows y licencias antes de ejecutar. Nunca pegues secretos.</p></div>
-        <span class="safety-code">SAFE_MODE = ON</span>
+        <span class="safety-code">REVISIÓN PREVIA</span>
       </section>
 
       <section id="inbox" class="inbox shell" aria-labelledby="inbox-title">
         <div class="section-heading inbox-heading">
-          <div><p class="step-label">02 / INBOX</p><h2 id="inbox-title">Para revisar después</h2></div>
+          <div><p class="step-label">02 / BANDEJA</p><h2 id="inbox-title">Para revisar después</h2></div>
           <div><p>Capturas locales de repos encontrados en TikTok, GitHub, Reddit o YouTube.</p><span id="inbox-count" class="local-label">0 · solo en este dispositivo</span></div>
         </div>
         <div id="inbox-list" class="inbox-list" aria-live="polite"></div>
         <div id="inbox-empty" class="inbox-empty glass">
-          <span aria-hidden="true"><svg class="icon"><use href="#icon-inbox"/></svg></span><div><strong>Tu bandeja está vacía</strong><p>Pega un repositorio arriba, analízalo y guárdalo para volver después.</p></div>
+          <span aria-hidden="true"><svg class="icon"><use href="#icon-inbox"/></svg></span><div><strong>La bandeja está vacía</strong><p>Registre un repositorio y guarde su ficha para revisarla después.</p></div>
         </div>
         <p class="inbox-truth"><strong>Importante:</strong> esta bandeja vive únicamente en tu navegador. Un repo se vuelve experimento oficial cuando su ficha se revisa y se añade a <code>data/experiments.json</code> mediante Git.</p>
       </section>
 
       <section id="catalog" class="catalog shell" aria-labelledby="catalog-title">
         <div class="section-heading">
-          <div><p class="step-label">03 / REGISTRY</p><h2 id="catalog-title">Experimentos oficiales</h2></div>
+          <div><p class="step-label">03 / CATÁLOGO</p><h2 id="catalog-title">Experimentos oficiales</h2></div>
           <p id="result-count" class="result-count">Cargando catálogo…</p>
         </div>
 
         <div class="toolbar glass">
-          <label class="search-control" for="search-input"><svg class="icon" aria-hidden="true"><use href="#icon-search"/></svg><span class="sr-only">Buscar experimentos</span><input id="search-input" type="search" placeholder="Buscar Whisper, AI, Python, Audio…" /></label>
+          <label class="search-control" for="search-input"><svg class="icon" aria-hidden="true"><use href="#icon-search"/></svg><span class="sr-only">Buscar experimentos</span><input id="search-input" type="search" placeholder="Buscar por proyecto, tecnología o tarea…" /></label>
           <label class="environment-control" for="environment-filter"><span class="sr-only">Filtrar por entorno</span><select id="environment-filter"><option value="all">Todos los entornos</option><option value="pages">Pages</option><option value="codespaces">Codespaces</option><option value="local">Local</option><option value="vercel">Vercel</option><option value="railway">Railway</option><option value="docker">Docker</option><option value="unknown">Por clasificar</option></select></label>
-          <div class="toolbar-actions">
+          <div class="toolbar-actions"><button id="reset-catalog" class="button secondary" type="button">Restablecer</button>
             <button id="view-toggle" class="icon-button" type="button" aria-label="Cambiar a vista de lista" title="Cambiar vista"><svg class="icon" aria-hidden="true"><use href="#icon-rows-3"/></svg></button>
             <button id="export-button" class="button secondary" type="button">Exportar JSON <svg class="icon" aria-hidden="true"><use href="#icon-download"/></svg></button>
           </div>
@@ -133,23 +133,23 @@
       </section>
 
       <section id="method" class="method shell" aria-labelledby="method-title">
-        <div class="section-heading"><div><p class="step-label">04 / METHOD</p><h2 id="method-title">Del hallazgo a algo útil</h2></div><p>El resultado también puede ser “no sirve”. El aprendizaje se queda.</p></div>
+        <div class="section-heading"><div><p class="step-label">04 / MÉTODO</p><h2 id="method-title">Del hallazgo a algo útil</h2></div><p>Documente los resultados antes de adoptar o descartar una opción.</p></div>
         <ol class="flow-list">
-          <li><svg class="icon" aria-hidden="true"><use href="#icon-search"/></svg><span>01</span><strong>Discover</strong><small>Lo encontré</small></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#icon-shield-alert"/></svg><span>02</span><strong>Inspect</strong><small>Entiendo riesgos</small></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#icon-external-link"/></svg><span>03</span><strong>Launch</strong><small>Elijo entorno</small></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#icon-flask-conical"/></svg><span>04</span><strong>Experiment</strong><small>Lo modifico</small></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#icon-bookmark"/></svg><span>05</span><strong>Learn</strong><small>Documento</small></li>
-          <li><svg class="icon" aria-hidden="true"><use href="#icon-package-check"/></svg><span>06</span><strong>Keep</strong><small>Promuevo o descarto</small></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#icon-search"/></svg><span>01</span><strong>Identificar</strong><small>Registrar</small></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#icon-shield-alert"/></svg><span>02</span><strong>Revisar</strong><small>Revisar requisitos</small></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#icon-external-link"/></svg><span>03</span><strong>Abrir</strong><small>Elegir entorno</small></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#icon-flask-conical"/></svg><span>04</span><strong>Experimentar</strong><small>Probar</small></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#icon-bookmark"/></svg><span>05</span><strong>Documentar</strong><small>Documentar</small></li>
+          <li><svg class="icon" aria-hidden="true"><use href="#icon-package-check"/></svg><span>06</span><strong>Conservar</strong><small>Adoptar o descartar</small></li>
         </ol>
         <div class="promotion glass"><div><span class="promotion-mark"><svg class="icon" aria-hidden="true"><use href="#icon-package-check"/></svg></span><div><strong>Toolchain</strong><small>Una herramienta adoptada</small></div></div><div><span class="promotion-mark"><svg class="icon" aria-hidden="true"><use href="#icon-folder-kanban"/></svg></span><div><strong>Proyecto propio</strong><small>Una idea que creció</small></div></div><div><span class="promotion-mark"><svg class="icon" aria-hidden="true"><use href="#icon-git-fork"/></svg></span><div><strong>Fork permanente</strong><small>Una base para desarrollar</small></div></div></div>
       </section>
     </main>
 
-    <footer class="shell"><p><strong>REYNOSO LAB</strong> · Git + JSON + Markdown. Sin backend, sin secretos, sin magia falsa.</p><a href="https://github.com/reynosoch/reynoso-lab">Ver fuente <svg class="icon" aria-hidden="true"><use href="#icon-external-link"/></svg></a></footer>
+    <footer class="shell"><p><strong>REYNOSO LAB</strong> · Git + JSON + Markdown. Sin backend, sin secretos, procesamiento local.</p><a href="https://github.com/reynosoch/reynoso-lab">Ver fuente <svg class="icon" aria-hidden="true"><use href="#icon-external-link"/></svg></a></footer>
 
     <dialog id="experiment-dialog" aria-labelledby="dialog-title"><div id="dialog-content"></div><button id="dialog-close" class="dialog-close" type="button" aria-label="Cerrar detalle"><svg class="icon" aria-hidden="true"><use href="#icon-x"/></svg></button></dialog>
     <div id="toast" class="toast" role="status" aria-live="polite"></div>
-    <script type="module" src="./app.js?v=liquid-glass"></script>
-  </body>
+    <script type="module" src="./app.js?v=workspace-2"></script>
+  <script type="module" src="./workspace.mjs?v=2"></script></body>
 </html>

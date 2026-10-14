@@ -5,6 +5,10 @@
   "type": "module",
   "scripts": {
     "check": "node --test tests/*.test.mjs && node --check app.js && node scripts/validate-site.mjs",
-    "build": "node scripts/build.mjs"
+    "build": "node scripts/build.mjs",
+    "check:browser": "node tests/browser.mjs"
+  },
+  "devDependencies": {
+    "playwright": "^1.64.0"
   }
 }

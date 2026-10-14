@@ -10,5 +10,6 @@ if (validation.status !== 0) process.exit(validation.status ?? 1);
 await rm(dist, { recursive: true, force: true });
 await mkdir(dist, { recursive: true });
 const entries = ["index.html", "styles.css", "app.js", ".nojekyll", "LICENSE", "assets", "data", "experiments", "lib"];
+entries.push('portal.css','workspace.css','workspace.mjs','workspace-tools.mjs');
 for (const entry of entries) await cp(resolve(root, entry), resolve(dist, entry), { recursive: true });
 console.log(`Build listo en ${dist}`);

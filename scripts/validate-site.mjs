@@ -1,5 +1,6 @@
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
+import {execFileSync} from 'node:child_process';
 
 const root = resolve(import.meta.dirname, "..");
 const read = path => readFile(resolve(root, path), "utf8");
@@ -8,6 +9,10 @@ const [html, app, styles, inbox, rawData] = await Promise.all([
 ]);
 const data = JSON.parse(rawData);
 const errors = [];
+for(const script of ['workspace.mjs','workspace-tools.mjs'])execFileSync(process.execPath,['--check',resolve(root,script)]);
+for(const asset of ['portal.css','workspace.css','workspace.mjs','workspace-tools.mjs'])await read(asset);
+const publicCopy=html.replace(/<[^>]*>/g,' ')+' '+[...html.matchAll(/(?:aria-label|title|placeholder|content)="([^"]*)"/g)].map(m=>m[1]).join(' ');
+if(/\b(?:IA|AI)\b|inteligencia artificial/i.test(publicCopy))errors.push('Referencia no permitida en el texto público.');
 
 if (!html.includes("<html lang=\"es\">")) errors.push("Falta declarar el idioma del documento.");
 if (!html.includes("<meta name=\"viewport\"")) errors.push("Falta viewport responsive.");

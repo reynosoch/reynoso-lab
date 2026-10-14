@@ -6,6 +6,16 @@ Laboratorio personal para descubrir, inspeccionar, probar y documentar proyectos
 
 LAB comparte con Toolchain el mismo sistema Liquid Glass —superficies translúcidas, brillo interno, profundidad, radios y navegación— y conserva el verde como señal de exploración. La interfaz usa iconos locales de Lucide 1.55.0 en lugar de emojis o flechas tipográficas; su licencia está en `assets/LUCIDE_LICENSE.txt`.
 
+## Interfaz de trabajo
+
+La cabecera compacta y los accesos a Registrar, Bandeja, Experimentos y Método permiten ir directamente a la tarea. **Preparar ficha** valida la dirección y crea una ficha preliminar local; no ejecuta ni inspecciona automáticamente el código del repositorio. La búsqueda, los filtros por estado y entorno, la vista de lista y el botón Restablecer conservan el catálogo original.
+
+El selector **Herramientas** comparte los accesos disponibles con Toolchain, prioriza el uso reciente y abre otra pestaña para conservar la sesión. Atajos: **Alt + K** para el selector y **/** para buscar en el catálogo, fuera de campos de texto. Escape cierra el selector y devuelve el foco al botón; las flechas permiten recorrer sus enlaces.
+
+`portal.css`, `workspace.mjs` y `workspace-tools.mjs` son copias locales de la base visual y navegación de Toolchain; `workspace.css` define la composición propia de LAB. No requieren fuentes ni recursos visuales externos. Los datos, favoritos, notas y decisiones mantienen sus claves de almacenamiento. Si el navegador bloquea el almacenamiento, la sesión sigue operativa y ofrece exportar la ficha antes de cerrar.
+
+Verificación: `npm ci`, `npm run check`, `npm run build`; para la prueba de navegador, `npx playwright install chromium` y `npm run check:browser`. Se comprueban registro, validación, notas, recuperación, exportación, búsqueda, navegación y seis tamaños de pantalla.
+
 ```text
 Discover → Inspect → Launch → Experiment → Learn → Keep / Discard / Promote
 ```
